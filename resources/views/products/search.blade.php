@@ -55,7 +55,8 @@
       <table class="table table-hover">
         <thead style="background-color: #ffd900">
           <tr>
-            <th style="width:50%">商品名</th>
+            <th style="width:5%"></th>
+            <th>商品名</th>
             <th>商品カテゴリ</th>
             <th>価格</th>
             <th></th>
@@ -63,10 +64,11 @@
         </thead>
         @foreach($products as $product)
         <tr>
+          <td><img src="{{ asset($product['image']) }}" height="50px" width="50px"></td>
           <td>{{ $product->name }}</td>
           <td>{{ $product->type->name }}</td>
           <td>{{ $product->price }}円</td>
-          <td><a href="{{ route('detail.product', ['product' => $product['id']]) }}" class="btn btn-primary btn-sm">商品詳細</a></td>
+          <td><a href="{{ route('products.show', ['product' => $product['id']]) }}" class="btn btn-primary btn-sm">商品詳細</a></td>
         </tr>
         @endforeach   
       </table>

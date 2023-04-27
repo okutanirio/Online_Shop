@@ -8,13 +8,14 @@
     <div class="row justify-content-center">
 
     <div>
-    <a href="{{ route('create.product') }}">
+    <a href="{{ route('products.create') }}">
         <buttton type='button' class='btn btn-secondary'>商品登録</button>
     </a><div><br>
         
         <table border='1' cellpadding="15">
             <tr>
-                <th>商品ID</th>  
+                <th>商品ID</th>
+                <th>画像</th>
                 <th>商品名</th>
                 <th>価格</th>
                 <th>カテゴリー</th>
@@ -25,6 +26,7 @@
                 <?php $i = 1; ?>
                 <tr>
                     <td>{{ $product['id'] }}</td>
+                    <td><img src="{{ asset($product['image']) }}" height="60px" width="60px"></td>
                     <td>{{ $product['name'] }}</td>
                     <td>{{ $product['price'] }}</td>
                     @foreach($types as $type)
@@ -38,10 +40,13 @@
                     <td>{{ $product['created_at'] }}</td>
                     <td>{{ $product['updated_at'] }}</td>
 
-                    <td><a href="{{ route('edit.product', ['product' => $product['id']]) }}">
-                        編集</a>　|　
-                        <a href="{{ route('product.delete', ['product' => $product['id']]) }}" onclick="return confirm('削除します。よろしいですか？')">
-                        削除</a>
+                    <td><a href="{{route('products.edit', ['product' => $product['id']]) }}">
+                            <button class="btn btn-dark">編集</button></a>　|　
+                        <form action="{{route('products.destroy', ['product' => $product['id']]) }}" method="post" class="float-right">
+                            @csrf
+                            @method('delete')
+                            <input type="submit" value="削除" class="btn btn-danger" onclick='return confirm("削除しますか？");'>
+                        </form>
                     </td>
                 </tr>
                 

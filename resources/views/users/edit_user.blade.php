@@ -7,7 +7,19 @@
                     <h4 class='text-center'>会員登録変更</h1>
                 </div>
                 <div class="card-body">
-                    <div class="card-body">                        
+                    <div class="card-body">
+                        <div class='panel-body'>
+                            @if($errors->any())
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach($errors->all() as $message)
+                                    <li>{{ $message }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                            @endif
+                        </div>
+
                         <form action="{{ route('edit.user',['id' => $user['id']])}}" method="post" enctype="multipart/form-data">
                             @csrf
                             <label for='name'>名前</label>

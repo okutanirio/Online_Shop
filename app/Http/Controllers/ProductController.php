@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProductRequest;
 use Illuminate\Http\Request;
 
 use App\product;
@@ -27,7 +28,7 @@ class ProductController extends Controller
         $product = new Product;
         $type = new Type;
 
-        $all = $product->orderBy('created_at')->paginate(10);
+        $all = $product->orderBy('created_at', 'desc')->paginate(10);
 
         $types = $product->select('products.type_id', 'types.id', 'types.name')->join('types', 'products.type_id', 'types.id')->get()->toArray();
         //var_dump($types);
@@ -59,7 +60,7 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
+    public function store(ProductRequest $request) {
         //登録処理
         $product = new Product;        
 
@@ -76,7 +77,7 @@ class ProductController extends Controller
         
         $product->save();
 
-        return redirect()->route('products');
+        return redirect()->route('products.index');
     }
 
     /**
@@ -132,7 +133,7 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product) {
+    public function update(ProductRequest $request, Product $product) {
         //編集処理
 
         $record = $product->find($product['id']);
@@ -152,7 +153,7 @@ class ProductController extends Controller
 
         $record->save();
 
-        return redirect()->route('products');
+        return redirect()->route('products.index');
     }
 
     /**
@@ -166,8 +167,9 @@ class ProductController extends Controller
         //削除処理
 
         $product->where('id', $product['id'])->delete();
-        return redirect()->route('products');
+        return redirect()->route('products.index');
     }
+
 
     public function cart(Product $product)
     {

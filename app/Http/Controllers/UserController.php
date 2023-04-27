@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserRequest;
 use Illuminate\Http\Request;
 
 use App\User;
@@ -65,7 +66,7 @@ class UserController extends Controller
         ]);
     }
 
-    public function update(Request $request) {
+    public function update(UserRequest $request) {
         //編集処理
 
         $user = new User;

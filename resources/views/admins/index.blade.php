@@ -7,7 +7,7 @@
         <div class="title1">管理者ページ</div>
 
         <div class="item_list">
-            <a href="{{ route('products') }}"><div class="item1">管理商品一覧</div></a>
+            <a href="{{ route('products.index') }}"><div class="item1">管理商品一覧</div></a>
         </div>
         </div>
 

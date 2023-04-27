@@ -13,7 +13,7 @@ class AdminController extends Controller
     {
         $user = new User;
 
-        $all = $user->orderBy('created_at')->paginate(10);
+        $all = $user->orderBy('created_at', 'desc')->paginate(10);
         
         return view('admins.index', [
             'users' => $all, 

@@ -26,8 +26,13 @@ Route::get('/home', 'HomeController@index')->name('home');
 //ログイン・ログアウト・新規登録（認証回り）
 Auth::routes();
 
+
+
 //管理者
 Route::get('admin', 'AdminController@index')->name('admin');
+
+Route::resource('products', 'ProductController');
+/*
 Route::get('admin/product', 'ProductController@index')->name('products');
 //商品登録
 Route::get('admin/create_product', 'ProductController@create')->name('create.product');
@@ -39,7 +44,7 @@ Route::post('admin/edit_product/{product}', 'ProductController@update');
 Route::get('admin/productdelete/{product}', 'ProductController@destroy')->name('product.delete');
 //商品詳細
 Route::get('/product/detail_product/{product}', 'ProductController@show')->name('detail.product');
-
+*/
 //カート
 Route::get('/product/cart/{product}', 'ProductController@cart')->name('cart');
 Route::get('/product/cartdelete/{id}', 'ProductController@cartdelete')->name('cart.delete');
@@ -78,5 +83,5 @@ Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail'
 Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
 Route::post('password/reset/{token}', 'Auth\ResetPasswordController@reset');
 
-//Route::resource('products', 'ProductController');
+
 

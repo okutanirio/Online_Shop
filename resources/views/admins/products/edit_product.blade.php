@@ -7,9 +7,22 @@
                     <h4 class='text-center'>編集</h1>
                 </div>
                 <div class="card-body">
-                    <div class="card-body">                        
-                        <form action="{{ route('edit.product',['product' => $id])}}" method="post" enctype="multipart/form-data">
+                    <div class="card-body">
+                        <div class='panel-body'>
+                            @if($errors->any())
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach($errors->all() as $message)
+                                    <li>{{ $message }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                            @endif
+                        </div>
+
+                        <form action="{{ route('products.update',['product' => $id])}}" method="post" enctype="multipart/form-data">
                             @csrf
+                            @method('PUT')
                             <label for='name'>商品名</label>
                                 <input type='text' class='form-control' name='name' value="{{ $result['name'] }}"/>
                             <label for='price' class='mt-2'>価格</label>
