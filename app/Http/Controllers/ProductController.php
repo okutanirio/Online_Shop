@@ -46,11 +46,10 @@ class ProductController extends Controller
      */
     public function create() {
         //登録表示
-        $type = new Type;
-        $typeall = $type->all()->toArray();
+        $types = Type::get();
 
         return view('/admins/products.product_form', [
-            'types' => $typeall, 
+            'types' => $types, 
         ]);
     }
 
@@ -64,10 +63,11 @@ class ProductController extends Controller
         //登録処理
         $product = new Product;        
 
-        $product->name = $request->name;
-        $product->price = $request->price;
-        $product->type_id = $request->type_id;
-        $product->description = $request->description;
+        $product->name          = $request->name;
+        $product->price         = $request->price;
+        $product->type_id       = $request->type_id;
+        $product->info          = $request->info;
+        $product->description   = $request->description;
 
         $dir = 'image';
         $file_name = $request->file('image')->getClientOriginalName();

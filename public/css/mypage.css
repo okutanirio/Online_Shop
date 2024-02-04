@@ -99,7 +99,9 @@
 }
 
 .category {
+    display: block;
     color: black;
+    text-align: center;
 }
 
 .category_info {
