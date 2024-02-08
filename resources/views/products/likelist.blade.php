@@ -11,7 +11,7 @@
             @if($userid == $like['user_id'])
                 @if($like['product_id'] == $product['id'])
                 <div class="col-xs-1 col-sm-6 col-md-4 col-lg-3 mb-3">
-                    <div class="card">
+                    <div class="card card_height">
                         <a href="{{ route('products.show', ['product' => $product['id']]) }}">
                             <div class="position-relative">
                                 @if (!empty($product['image']))

@@ -32,19 +32,7 @@ Auth::routes();
 Route::get('admin', 'AdminController@index')->name('admin');
 
 Route::resource('products', 'ProductController');
-/*
-Route::get('admin/product', 'ProductController@index')->name('products');
-//商品登録
-Route::get('admin/create_product', 'ProductController@create')->name('create.product');
-Route::post('admin/create_product', 'ProductController@store');
-//商品編集
-Route::get('admin/edit_product/{product}', 'ProductController@edit')->name('edit.product');
-Route::post('admin/edit_product/{product}', 'ProductController@update');
-//商品削除
-Route::get('admin/productdelete/{product}', 'ProductController@destroy')->name('product.delete');
-//商品詳細
-Route::get('/product/detail_product/{product}', 'ProductController@show')->name('detail.product');
-*/
+
 //カート
 Route::get('/product/cart/{product}', 'ProductController@cart')->name('cart');
 Route::get('/product/cartdelete/{id}', 'ProductController@cartdelete')->name('cart.delete');

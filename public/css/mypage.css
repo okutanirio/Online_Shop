@@ -287,3 +287,13 @@
 .item1 {
     color: black;
 }
+
+/* 商品高さ */
+.card_height {
+    height: 450px;;
+}
+
+/* review関連 */
+.review_btn {
+    margin-top: 80px;
+}

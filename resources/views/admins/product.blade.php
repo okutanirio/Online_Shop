@@ -28,7 +28,7 @@
                     <td>{{ $product['id'] }}</td>
                     <td><img src="{{ asset($product['image']) }}" height="60px" width="60px"></td>
                     <td>{{ $product['name'] }}</td>
-                    <td>{{ $product['price'] }}</td>
+                    <td>{{ number_format($product['price']) }}</td>
                     @foreach($types as $type)
                         @if($product['type_id'] === $type['id'])
                             @if($i == 1)
@@ -41,7 +41,7 @@
                     <td>{{ $product['updated_at'] }}</td>
 
                     <td><a href="{{route('products.edit', ['product' => $product['id']]) }}">
-                            <button class="btn btn-dark">編集</button></a>　|　
+                            <button class="btn btn-dark" style="background: blue">編集</button></a>　|　
                         <form action="{{route('products.destroy', ['product' => $product['id']]) }}" method="post" class="float-right">
                             @csrf
                             @method('delete')

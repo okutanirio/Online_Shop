@@ -25,6 +25,13 @@
                     </a>
                 </div>
                 @Auth
+
+                    <div class="item_cart review_btn">
+                        {{-- <a href="{{ route('cart', ['product' => $product['id']]) }}"> --}}
+                            <button class='btn btn-primary'>レビューを見る</button>
+                        {{-- </a> --}}
+                    </div>
+
                     @if($like_model->like_exist(Auth::user()->id,$product->id))
                     <div class="like_position">
                         <p class="favorite-marke">
