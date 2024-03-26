@@ -9,15 +9,6 @@
                 <div class="card-body">
                     <div class="card-body">
                         <div class='panel-body'>
-                            {{-- @if($errors->any())
-                            <div class="alert alert-danger">
-                                <ul>
-                                    @foreach($errors->all() as $message)
-                                    <li>{{ $message }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                            @endif --}}
                         </div>
 
                         <form action="{{ route('products.update',['product' => $id])}}" method="post" enctype="multipart/form-data">
@@ -45,11 +36,11 @@
                             @error('type_id') <div class="alert alert-danger">{{ $message }}</div> @enderror
 
                             <label for='info' class='mt-2'>商品情報</label>
-                            <textarea class='form-control' style="height: 100px" name='info'>{{ old('info') }}</textarea>
+                            <textarea class='form-control' style="height: 100px" name='info'>{{ old('info', $result['info']) }}</textarea>
                             @error('info') <div class="alert alert-danger">{{ $message }}</div> @enderror
                             
                             <label for='description' class='mt-2'>商品説明</label>
-                            <textarea class='form-control' name='description'>{{ $result['description'] }}</textarea>
+                            <textarea class='form-control' style="height: 100px" name='description'>{{ old('description', $result['description']) }}</textarea>
                             @error('description') <div class="alert alert-danger">{{ $message }}</div> @enderror
                             
                             <label for='image' class='mt-2'>画像</label><br>
@@ -57,7 +48,7 @@
                             @error('image') <div class="alert alert-danger">{{ $message }}</div> @enderror
 
                                 <div class='row justify-content-center'>
-                                <button type='submit' class='btn btn-primary w-25 mt-3'>登録</button>
+                                <button type='submit' class='btn btn-primary w-25 mt-3'>更新</button>
                             </div> 
                         </form>
                     </div>

@@ -31,6 +31,8 @@ Route::get('admin', 'AdminController@index')->name('admin');
 ////////////////////////////////////////////////////////////
 // 商品関連
 Route::resource('products', 'ProductController');
+// 管理者商品詳細
+Route::get('/product/detail/{id}', 'ProductController@detail')->name('products.detail');
 //カート
 Route::get('/product/cart/{product}', 'ProductController@cart')->name('cart');
 Route::get('/product/cartdelete/{id}', 'ProductController@cartdelete')->name('cart.delete');

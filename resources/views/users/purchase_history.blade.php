@@ -22,7 +22,7 @@
                             <tr>
                                 <td><img width="50px" height="50px" src="{{ asset($product['image']) }}">
                                 {{ $product['name'] }}</td>
-                                <td>￥{{ $product['price'] }}</td>
+                                <td>￥{{ number_format($product['price']) }}</td>
                                 <td>{{ $productuser['created_at'] }}</td>
                         <?php
                             $a = (int)$product['price'];
@@ -45,7 +45,7 @@
                     <table class="cart_order" width="300vw" border="1">
                         <tr>
                             <th>注文合計金額</th>
-                            <td>￥{{ $total }}</td>
+                            <td>￥{{ number_format($total) }}</td>
                         </tr>
                         <tr>
                             <th>合計注文件数</th>

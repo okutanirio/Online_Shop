@@ -67,7 +67,7 @@
           <td><img src="{{ asset($product['image']) }}" height="50px" width="50px"></td>
           <td>{{ $product->name }}</td>
           <td>{{ $product->type->name }}</td>
-          <td>{{ $product->price }}円</td>
+          <td>{{ number_format($product->price) }}円</td>
           <td><a href="{{ route('products.show', ['product' => $product['id']]) }}" class="btn btn-primary btn-sm">商品詳細</a></td>
         </tr>
         @endforeach   

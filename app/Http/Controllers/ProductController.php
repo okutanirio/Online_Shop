@@ -11,6 +11,7 @@ use App\type;
 use App\productuser;
 use App\like;
 use App\Review;
+use Illuminate\Support\Facades\Storage;
 
 use Illuminate\Support\Facades\Auth;
 
@@ -28,9 +29,9 @@ class ProductController extends Controller
     public function index() {
         //一覧表示
         $all        = Product::orderBy('created_at', 'desc')->paginate(10);
-        $types      = Product::select('products.type_id', 'types.id', 'types.name')->join('types', 'products.type_id', 'types.id')->get()->toArray();
+        // $types      = Product::select('products.type_id', 'types.id', 'types.name')->join('types', 'products.type_id', 'types.id')->get()->toArray();
 
-        return view('admins.product', ['types' => $types, 'products' => $all]);
+        return view('admins.product', ['products' => $all]);
     }
 
     /**
@@ -64,14 +65,14 @@ class ProductController extends Controller
         $product->description   = $request->description;
 
         $dir = 'image';
-        $file_name = $request->file('image')->getClientOriginalName();
+        $file_name = date('Ymdhis'). '_' .$request->file('image')->getClientOriginalName();
         $request->file('image')->storeAs('public/' . $dir, $file_name);
 
         $product->image = 'storage/' . $dir . '/' . $file_name;
 
         $product->save();
 
-        return redirect()->route('products.index');
+        return redirect()->route('products.index')->with('flash_message', '商品の登録が完了しました。');
     }
 
     /**
@@ -127,9 +128,13 @@ class ProductController extends Controller
         //編集処理
 
         $record = $product->find($product['id']);
+        
+        //古い画像削除
+        $image = substr($record['image'], 14);
+        Storage::disk('public')->delete('image/'. $image);
 
         $dir = 'image';
-        $file_name = $request->file('image')->getClientOriginalName();
+        $file_name = date('Ymdhis'). '_' .$request->file('image')->getClientOriginalName();
         $request->file('image')->storeAs('public/' . $dir, $file_name);
         $product->image = 'storage/' . $dir . '/' . $file_name;
 
@@ -142,7 +147,7 @@ class ProductController extends Controller
 
         $record->save();
 
-        return redirect()->route('products.index');
+        return redirect()->route('products.index')->with('flash_message', '商品の編集が完了しました。');
     }
 
     /**
@@ -154,8 +159,19 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         //削除処理
+        $image = substr($product['image'], 14);
+        Storage::disk('public')->delete('image/'. $image);
         $product->where('id', $product['id'])->delete();
-        return redirect()->route('products.index');
+        return redirect()->route('products.index')->with('flash_message', '商品の削除が完了しました。');
+    }
+
+    // 管理者詳細ページ
+    public function detail($id)
+    {
+        $product    = Product::find($id);
+        $purchase   = productuser::where('product_id', $id)->count();
+
+        return view('/admins/products.detail', compact('product', 'purchase'));
     }
 
     //////////////////////////////////////////////////////////////////
