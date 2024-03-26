@@ -14,8 +14,7 @@ use App\product;
 */
 
 Route::get('/', function () {
-    $product = new Product;
-    $all = $product->orderBy('created_at', 'desc')->take(8)->get();
+    $all = Product::orderBy('created_at', 'desc')->take(8)->get();
     return view('home', [
         'products' => $all, 
     ]);
@@ -40,6 +39,9 @@ Route::get('/product/cartlist', 'ProductController@cartlist')->name('cart.list')
 //注文
 Route::get('/product/order_conf', 'ProductController@orderconf')->name('order.conf');
 Route::get('/product/order_conp', 'ProductController@orderconp')->name('order.conp');
+// レビュー機能
+Route::post('/product/review_send', 'ProductController@review_send')->name('review.review_send');
+Route::get('/product/review_list/{id}', 'ProductController@review_list')->name('review.review_list');
 
 //一般ユーザ
 Route::get('/users/mypage/{id}', 'UserController@index')->name('mypage');

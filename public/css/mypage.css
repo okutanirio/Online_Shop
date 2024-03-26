@@ -297,3 +297,16 @@
 .review_btn {
     margin-top: 80px;
 }
+.review_th {
+    background-color: rgb(241, 199, 9);
+    width: 150px
+}
+.form-error {
+    color: red;
+}
+.review_complete {
+    background: greenyellow;
+    font-weight: bold;
+    padding: 10px;
+    text-align: center
+}

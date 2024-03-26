@@ -8,9 +8,9 @@
     <div class="row justify-content-center">
 
     <div>
-    <a href="{{ route('products.create') }}">
-        <buttton type='button' class='btn btn-secondary'>商品登録</button>
-    </a><div><br>
+        <a href="{{ route('products.create') }}">
+            <button type='button' class='btn btn-secondary'>商品登録</button>
+        </a><div><br>
         
         <table border='1' cellpadding="15">
             <tr>
