@@ -99,7 +99,9 @@
 }
 
 .category {
+    display: block;
     color: black;
+    text-align: center;
 }
 
 .category_info {
@@ -284,4 +286,27 @@
 
 .item1 {
     color: black;
+}
+
+/* 商品高さ */
+.card_height {
+    height: 450px;;
+}
+
+/* review関連 */
+.review_btn {
+    margin-top: 80px;
+}
+.review_th {
+    background-color: rgb(241, 199, 9);
+    width: 150px
+}
+.form-error {
+    color: red;
+}
+.review_complete {
+    background: greenyellow;
+    font-weight: bold;
+    padding: 10px;
+    text-align: center
 }

@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProductRequest;
+use App\Http\Requests\ReviewRequest;
 use Illuminate\Http\Request;
 
 use App\product;
 use App\type;
 use App\productuser;
 use App\like;
+use App\Review;
 
 use Illuminate\Support\Facades\Auth;
 
@@ -25,18 +27,10 @@ class ProductController extends Controller
      */
     public function index() {
         //一覧表示
-        $product = new Product;
-        $type = new Type;
+        $all        = Product::orderBy('created_at', 'desc')->paginate(10);
+        $types      = Product::select('products.type_id', 'types.id', 'types.name')->join('types', 'products.type_id', 'types.id')->get()->toArray();
 
-        $all = $product->orderBy('created_at', 'desc')->paginate(10);
-
-        $types = $product->select('products.type_id', 'types.id', 'types.name')->join('types', 'products.type_id', 'types.id')->get()->toArray();
-        //var_dump($types);
-        
-        return view('admins.product', [
-            'types' => $types, 
-            'products' => $all, 
-        ]);
+        return view('admins.product', ['types' => $types, 'products' => $all]);
     }
 
     /**
@@ -46,11 +40,10 @@ class ProductController extends Controller
      */
     public function create() {
         //登録表示
-        $type = new Type;
-        $typeall = $type->all()->toArray();
+        $types = Type::get();
 
         return view('/admins/products.product_form', [
-            'types' => $typeall, 
+            'types' => $types, 
         ]);
     }
 
@@ -64,17 +57,18 @@ class ProductController extends Controller
         //登録処理
         $product = new Product;        
 
-        $product->name = $request->name;
-        $product->price = $request->price;
-        $product->type_id = $request->type_id;
-        $product->description = $request->description;
+        $product->name          = $request->name;
+        $product->price         = $request->price;
+        $product->type_id       = $request->type_id;
+        $product->info          = $request->info;
+        $product->description   = $request->description;
 
         $dir = 'image';
         $file_name = $request->file('image')->getClientOriginalName();
         $request->file('image')->storeAs('public/' . $dir, $file_name);
 
         $product->image = 'storage/' . $dir . '/' . $file_name;
-        
+
         $product->save();
 
         return redirect()->route('products.index');
@@ -112,11 +106,7 @@ class ProductController extends Controller
     public function edit(product $product)
     {
         //編集ページの表示
-
         $result = $product->find($product['id']);
-        //var_dump($result);
-        //echo $result['name'];
-
         $types = Type::get();
 
         return view('/admins/products.edit_product', [
@@ -138,7 +128,6 @@ class ProductController extends Controller
 
         $record = $product->find($product['id']);
 
-        
         $dir = 'image';
         $file_name = $request->file('image')->getClientOriginalName();
         $request->file('image')->storeAs('public/' . $dir, $file_name);
@@ -165,12 +154,12 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         //削除処理
-
         $product->where('id', $product['id'])->delete();
         return redirect()->route('products.index');
     }
 
-
+    //////////////////////////////////////////////////////////////////
+    // カート関連
     public function cart(Product $product)
     {
         //カート処理 status0=カート status1=購入
@@ -223,6 +212,8 @@ class ProductController extends Controller
         return redirect()->route('cart.list');
     }
 
+    //////////////////////////////////////////////////////////////////
+    // 購入関連
     public function orderconf() {
         
         $productuser = new productuser;
@@ -248,6 +239,8 @@ class ProductController extends Controller
         return view('/products/order_conp');
     }
 
+    //////////////////////////////////////////////////////////////////
+    // カテゴリー関連
     public function pierce() {
         
         $product = new Product;
@@ -288,7 +281,8 @@ class ProductController extends Controller
             'products' => $all, 
         ]);
     }
-
+    
+    // 商品検索
     public function result(request $request) {
         
         $searchWord = $request->input('searchWord');
@@ -342,6 +336,7 @@ class ProductController extends Controller
         return str_replace(['\\', '%', '_'], ['\\\\', '\%', '\_'], $str);
     }
 
+    // お気に入り機能
     public function ajaxlike(Request $request)  {
         $id = Auth::user()->id;
         $product_id = $request->product_id;
@@ -400,5 +395,21 @@ class ProductController extends Controller
         ]);
     }
 
+    // レビュー関連
+    public function review_send(ReviewRequest $request)  {
+        $review = new Review();
+        $review->product_id = $request->product_id;
+        $review->name       = $request->name;
+        $review->evaluation = $request->evaluation;
+        $review->comment    = $request->comment ?? '';
+        $review->save();
+
+        return redirect()->back()->with('flash_message', 'レビューの投稿が完了しました。');
+    }
+
+    public function review_list($id)  {
+        $reviews = Review::where('product_id', $id)->orderBy('created_at', 'DESC')->paginate(20);
+        return view('products/review_list', compact('reviews'));
+    }
 
 }
