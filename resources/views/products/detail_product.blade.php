@@ -20,7 +20,7 @@
                 </h3>
             </div>
             <div class="item_price">
-                <p class="mt-4 mb-5">￥{{ $product['price'] }}
+                <p class="mt-4 mb-5">￥{{ number_format($product['price']) }}
                 </p>
             </div>
 

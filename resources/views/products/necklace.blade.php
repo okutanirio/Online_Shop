@@ -25,7 +25,7 @@
                     </a>
                     <div class="card-body">
                         <h5 class="card-title">{{ $product['name'] }}</h5>
-                        <p class="card-text">￥{{ $product['price'] }}</p>
+                        <p class="card-text">￥{{ number_format($product['price']) }}</p>
                     </div>
                 </div>
             </div>

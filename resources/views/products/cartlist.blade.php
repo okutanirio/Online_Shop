@@ -22,7 +22,7 @@
                             <tr>
                                 <td><img width="50px" height="50px" src="{{ asset($product['image']) }}">
                                 {{ $product['name'] }}</td>
-                                <td>￥{{ $product['price'] }}</td>
+                                <td>￥{{ number_format($product['price']) }}</td>
                                 <td>
                                     <a href="{{ route('cart.delete', ['id' => $productuser['id']]) }}">
                                     <button class='btn btn-secondary'>削除</button></a>
@@ -47,7 +47,7 @@
                     <table class="cart_order" width="300vw" border="1">
                         <tr>
                             <th>商品合計</th>
-                            <td>￥{{ $total }}</td>
+                            <td>￥{{ number_format($total) }}</td>
                         </tr>
                         <th></th>
                         <td><a href="{{ route('order.conf') }}">
