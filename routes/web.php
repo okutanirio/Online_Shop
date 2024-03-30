@@ -1,6 +1,7 @@
 <?php
 
 use App\product;
+use App\Consts\ProductConst;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,14 +13,16 @@ use App\product;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+// 未ログイン
 Route::get('/', function () {
-    $all = Product::orderBy('created_at', 'desc')->take(8)->get();
+    $all    = Product::orderBy('created_at', 'desc')->take(8)->get();
+    $types  = ProductConst::TYPE_LIST;
     return view('home', [
-        'products' => $all, 
+        'products'  => $all, 
+        'types'     => $types
     ]);
 });
-
+// ログイン後
 Route::get('/home', 'HomeController@index')->name('home');
 
 //ログイン・ログアウト・新規登録（認証回り）

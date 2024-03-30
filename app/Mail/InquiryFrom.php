@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class InquirySend extends Mailable
+class InquiryFrom extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -30,9 +30,9 @@ class InquirySend extends Mailable
      */
     public function build()
     {
-        return $this->subject('お問い合わせが送信されました。')
-        ->from($this->request->email)
-        ->to('OnlineShop@example.com')
-        ->view('emails.inquiry_send');
+        return $this->subject('お問い合わせ完了通知')
+        ->from('OnlineShop@example.com')
+        ->to($this->request->email)
+        ->view('emails.inquiry_from');
     }
 }

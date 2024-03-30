@@ -3,6 +3,13 @@
 @section('content')
 
 <div class="container">
+    {{-- 成功メッセージ --}}
+    @if (session('flash_message'))
+        <div class="review_complete">{{ session('flash_message') }}</div>
+    @endif
+    @if (session('error_message'))
+        <div class="review_complete" style="background: red; border: red;">{{ session('error_message') }}</div>
+    @endif
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="title1">ショッピングカート</div><br>
@@ -10,8 +17,8 @@
             @if($a == 1)
             <table class="cartlist" width="600vw">
                 <tr>
-                <th>商品名</th>
-                <th>小計</th>
+                    <th>商品名</th>
+                    <th>小計</th>
                 </tr>
             <?php $total = 0; ?>
                 @foreach($products as $product)
@@ -23,6 +30,9 @@
                                 <td><img width="50px" height="50px" src="{{ asset($product['image']) }}">
                                 {{ $product['name'] }}</td>
                                 <td>￥{{ number_format($product['price']) }}</td>
+                                <td>
+                                    <button class='btn btn-primary' onclick="location.href='{{ route('products.show', $product['id']) }}'">詳細</button></a>
+                                </td>
                                 <td>
                                     <a href="{{ route('cart.delete', ['id' => $productuser['id']]) }}">
                                     <button class='btn btn-secondary'>削除</button></a>

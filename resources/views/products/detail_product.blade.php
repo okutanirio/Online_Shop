@@ -8,6 +8,9 @@
         @if (session('flash_message'))
             <div class="review_complete">{{ session('flash_message') }}</div>
         @endif
+        @if (session('error_message'))
+            <div class="review_complete" style="background: red; border: red;">{{ session('error_message') }}</div>
+        @endif
         {{-- 商品情報 --}}
         <div class="jumbotron bg-white">
             <h1 class="text-center">商品情報</h1>
@@ -21,6 +24,11 @@
             </div>
             <div class="item_price">
                 <p class="mt-4 mb-5">￥{{ number_format($product['price']) }}
+                    <span style="margin-left: 100px">残り{{ $product['stock'] }}個</span>
+                </p>
+            </div>
+            <div class="item_info3">
+                <p class="mt-4 mb-5">{!! nl2br(e($product->info)) !!}
                 </p>
             </div>
 

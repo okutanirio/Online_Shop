@@ -3,12 +3,11 @@
 @section('content')
 <div class="container">
     <div class="productTable">
-        <h2 class="text-center" style="margin-bottom: 30px">管理者ページ</h2>
+        <h2 class="text-center" style="margin-bottom: 30px">登録ユーザ一覧</h2>
         <button class='btn' style="background: lightgray" onclick="location.href='{{ route('products.index') }}'">管理商品一覧</button>
 
         @if (!empty($users))
             <div class="productTable" style="margin-top: 30px">
-                <p class="item_info">登録ユーザー</p>
                 <table class="table table-hover">
                     <thead style="background-color: #ffd900">
                     <tr>
