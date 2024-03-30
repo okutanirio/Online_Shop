@@ -31,6 +31,10 @@
                                 <input type='text' class='form-control' name='price' id='price' value="{{ old('price') }}"/>
                                 @error('price') <div class="alert alert-danger">{{ $message }}</div> @enderror
                             
+                            <label for='price' class='mt-2'>在庫数</label>
+                                <input type='number' min="1" class='form-control' name='stock' id='stock' value="{{ old('stock') }}"/>
+                                @error('stock') <div class="alert alert-danger">{{ $message }}</div> @enderror
+                            
                             <label for='type' class='mt-2'>カテゴリ</label>
                             <select name='type_id' class='form-control'>
                                 <option value='' hidden>カテゴリ</option>
@@ -53,6 +57,7 @@
                                 @error('image') <div class="alert alert-danger">{{ $message }}</div> @enderror
                             
                             <div class='row justify-content-center'>
+                                <a class='btn btn-primary w-25 mt-3' id="product_back" href='{{ route('products.index') }}'>戻る</a>
                                 <button type='submit' class='btn btn-primary w-25 mt-3'>登録</button>
                             </div> 
                         </form>

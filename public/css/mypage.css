@@ -117,13 +117,20 @@
 
 .item_name {
     position: absolute;
-    top: 20vw;
+    top: 13vw;
     left: 57vw;
 }
 
 .item_price {
     position: absolute;
-    top: 25vw;
+    top: 16vw;
+    left: 57vw;
+}
+
+.item_info3 {
+    position: absolute;
+    font-size: 12px;
+    top: 18vw;
     left: 57vw;
 }
 
@@ -309,4 +316,15 @@
     font-weight: bold;
     padding: 10px;
     text-align: center
+}
+
+#product_back {
+    background: lightgray;
+    border: lightgray;
+    margin-right: 20px;
+    color: black
+}
+
+.nowraps {
+    white-space: nowrap
 }

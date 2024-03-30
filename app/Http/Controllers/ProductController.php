@@ -26,12 +26,52 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index() {
+    public function index(Request $request) {
         //一覧表示
-        $all        = Product::orderBy('created_at', 'desc')->paginate(10);
-        // $types      = Product::select('products.type_id', 'types.id', 'types.name')->join('types', 'products.type_id', 'types.id')->get()->toArray();
 
-        return view('admins.product', ['products' => $all]);
+        $searchWord = $request->input('searchWord');
+        $category = $request->input('category');
+        $minprice = $request->input('minprice');
+        $maxprice = $request->input('maxprice');
+
+        $query = product::query();
+
+        $typename['name'] = '0';
+
+        //商品名が入力された場合、productテーブルから一致する商品を$queryに代入
+        if (isset($searchWord)) {
+            $query->where('name', 'like', '%' . self::escapeLike($searchWord) . '%');
+        }
+        //カテゴリが選択された場合、m_categoriesテーブルからcategory_idが一致する商品を$queryに代入
+        if (isset($category)) {
+            $query->where('type_id', $category);
+            $typename = product::select('types.name')->join('types', 'products.type_id', 'types.id')->where('products.type_id', '=', $category)->first()->toArray();
+        }
+
+        if(isset($minprice)) {
+            $query->where('price', '>=', $minprice);
+        }
+        if(isset($maxprice)) {
+            $query->where('price', '<=', $maxprice);
+        }
+
+        //$queryをcategory_idの昇順に並び替えて$productsに代入
+        $products = $query->orderBy('created_at', 'desc')->paginate(10);
+
+        //m_categoriesテーブルからgetLists();関数でcategory_nameとidを取得する
+        $types = new type;
+        $types = $types->getLists();
+
+        return view('admins.product', [
+            'typename' => $typename['name'], 
+            'min' => $minprice, 
+            'max' => $maxprice, 
+            'products' => $products,
+            'types' => $types,
+            'category' => $category, 
+            'searchWord' => $searchWord,
+            'category' => $category, 
+        ]);
     }
 
     /**
@@ -60,6 +100,7 @@ class ProductController extends Controller
 
         $product->name          = $request->name;
         $product->price         = $request->price;
+        $product->stock         = $request->stock;
         $product->type_id       = $request->type_id;
         $product->info          = $request->info;
         $product->description   = $request->description;
@@ -67,7 +108,6 @@ class ProductController extends Controller
         $dir = 'image';
         $file_name = date('Ymdhis'). '_' .$request->file('image')->getClientOriginalName();
         $request->file('image')->storeAs('public/' . $dir, $file_name);
-
         $product->image = 'storage/' . $dir . '/' . $file_name;
 
         $product->save();
@@ -126,24 +166,35 @@ class ProductController extends Controller
      */
     public function update(ProductRequest $request, Product $product) {
         //編集処理
-
         $record = $product->find($product['id']);
+
+        // 画像削除押下時
+        if (isset($request->image_delete)) {
+            $image = substr($record['image'], 14);
+            Storage::disk('public')->delete('image/'. $image);
+
+            $record->image = null;
+            $record->save();
+            return redirect()->route('products.edit', ['product' => $product['id']])->with('flash_message', '画像を削除しました。');
+        }
         
-        //古い画像削除
-        $image = substr($record['image'], 14);
-        Storage::disk('public')->delete('image/'. $image);
+        // 画像変更あり
+        if (!isset($request->old_image)) {
+            $image = substr($record['image'], 14);
+            Storage::disk('public')->delete('image/'. $image);
 
-        $dir = 'image';
-        $file_name = date('Ymdhis'). '_' .$request->file('image')->getClientOriginalName();
-        $request->file('image')->storeAs('public/' . $dir, $file_name);
-        $product->image = 'storage/' . $dir . '/' . $file_name;
+            $dir = 'image';
+            $file_name = date('Ymdhis'). '_' .$request->file('image')->getClientOriginalName();
+            $request->file('image')->storeAs('public/' . $dir, $file_name);
+            $product->image = 'storage/' . $dir . '/' . $file_name;
+            $record->image = $product->image;
+        }
 
-        $columns = ['name', 'price', 'type_id', 'description'];
+        $columns = ['name', 'price', 'stock', 'type_id', 'info','description'];
 
         foreach($columns as $column) {
             $record->$column = $request->$column;
         }
-        $record->image = $product->image;
 
         $record->save();
 
@@ -178,6 +229,14 @@ class ProductController extends Controller
     // カート関連
     public function cart(Product $product)
     {
+        $product = Product::find($product['id']);
+        // 在庫確認
+        if ($product->stock == 0) {
+            return redirect()->route('products.show', $product['id'])->with('error_message', 'こちらの商品は在庫がありません。購入をご希望の場合はお問い合わせからご連絡ください。');
+        } else {
+            $product->stock = ($product->stock - 1);
+            $product->save();
+        }
         //カート処理 status0=カート status1=購入
         $productuser = new productuser;
         $userid = auth()->user()->id;
@@ -222,10 +281,14 @@ class ProductController extends Controller
 
     public function cartdelete($id)
     {
+        $productuser    = productuser::find($id);
+        $product        = Product::find($productuser->product_id);
+        $product->stock++;
+        $product->save();
+
         //削除処理
-        $productuser = new productuser;
-        $productuser->where('id', $id)->delete();
-        return redirect()->route('cart.list');
+        $productuser->delete();
+        return redirect()->route('cart.list')->with('flash_message', '商品の削除が完了しました。');
     }
 
     //////////////////////////////////////////////////////////////////
@@ -246,11 +309,14 @@ class ProductController extends Controller
     }
 
     public function orderconp() {
-        
-        $productuser = new productuser;
-        $user = auth()->user();
-
-        $productuser->where('user_id', $user['id'])->update(['status' => 1]);    
+        $productuser = productuser::where('user_id', Auth::user()->id)->get();
+        foreach ($productuser as $value) {
+            $product = Product::find($value->product_id);
+            if ($product->stock == 0) {
+                return redirect()->route('cart.list')->with('error_message', '商品名「'. $product->name .'」は在庫がありません。購入をご希望の場合はお問い合わせからご連絡ください。');
+            }
+        }
+        productuser::where('user_id', Auth::user()->id)->update(['status' => 1]);
 
         return view('/products/order_conp');
     }
@@ -329,11 +395,11 @@ class ProductController extends Controller
 
 
         //$queryをcategory_idの昇順に並び替えて$productsに代入
-        $products = $query->orderBy('id', 'asc')->paginate(15);
+        $products = $query->orderBy('id', 'asc')->paginate(10);
 
         //m_categoriesテーブルからgetLists();関数でcategory_nameとidを取得する
-        $category = new type;
-        $types = $category->getLists();
+        $types = new type;
+        $types = $types->getLists();
 
         return view('/products/search', [
             'typename' => $typename['name'], 
@@ -341,6 +407,7 @@ class ProductController extends Controller
             'max' => $maxprice, 
             'products' => $products,
             'types' => $types,
+            'category' => $category, 
             'searchWord' => $searchWord,
             'category' => $category, 
         ]);

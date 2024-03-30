@@ -19,7 +19,8 @@
                 <input type="text" class="form-control" name="searchWord" value="{{ $searchWord }}">
               </div>
               <div class="col-sm-auto">
-                <button type="submit" class="btn btn-primary ">検索</button>
+                <button type="button" class="btn btn-secondary" onclick="location.href='{{ route('search') }}'">クリア</button>
+                <button type="submit" class="btn btn-primary" style="margin-left: 10px">検索</button>
               </div>
             </div>     
             <!--プルダウンカテゴリ選択-->
@@ -30,7 +31,7 @@
                     <option value="">未選択</option>                    
 
                   @foreach($types as $id => $name)
-                  <option value="{{ $id }}">
+                  <option value="{{ $id }}" @if($category == $id) selected @endif>
                     {{ $name }}
                   </option>  
                   @endforeach

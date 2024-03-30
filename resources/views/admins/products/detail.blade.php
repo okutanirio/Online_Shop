@@ -3,7 +3,7 @@
 <main>
     <div class="container">
         <div class="productTable" style="">
-            <p class="item_info">詳細</p>
+            <p class="item_info">商品詳細</p>
             <table class="table table-hover" style="width: 50%; margin-left: 25%">
                 <thead>
                     <tr>
@@ -22,6 +22,12 @@
                         <th class="review_th">価格</th>
                         <td>
                             {{ number_format($product->price) }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="review_th">在庫数</th>
+                        <td>
+                            {{ $product->stock }}
                         </td>
                     </tr>
                     <tr>
@@ -56,7 +62,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td><button class="btn btn-primary" style="background: lightgray; border: lightgray; white-space: nowrap;" onclick="location.href='{{ route('products.index') }}'">戻る</button></td>
+                        <td><button class="btn btn-primary" style="color: black; background: lightgray; border: lightgray; white-space: nowrap;" onclick="location.href='{{ route('products.index') }}'">戻る</button></td>
                         <td style="text-align: right"><button class="btn btn-primary" style="background: blue; white-space: nowrap;" onclick="location.href='{{ route('products.edit', ['product' => $product->id]) }}'">編集</button></td>
                     </tr>
                 </thead>

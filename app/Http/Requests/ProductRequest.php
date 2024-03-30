@@ -23,12 +23,18 @@ class ProductRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'name'          => 'required', 
-            'price'         => 'required|integer', 
-            'type_id'       => 'required', 
-            'description'   => 'required', 
-            'image'         => 'required', 
-        ];
+        $ret = [];
+        if (!isset($this->image_delete)) {
+            $ret = [
+                'name'          => 'required', 
+                'price'         => 'required|integer', 
+                'stock'         => 'required|integer', 
+                'type_id'       => 'required', 
+                'info'          => 'required', 
+                'description'   => 'required', 
+                'image'         => 'required', 
+            ];
+        }
+        return $ret;
     }
 }
